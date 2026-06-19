@@ -481,7 +481,7 @@ export function PricingSection() {
           </div>
         </div>
 
-        <div id={calcId} className='flex flex-col gap-6'>
+        <div id={calcId} className='anchor-offset flex flex-col gap-6'>
           <div>
             <p className='section-eyebrow mb-2'>Калькулятор</p>
             <h3 className='section-title-sm mb-2'>Рассчитайте примерную стоимость</h3>

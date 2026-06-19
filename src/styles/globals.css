@@ -13,6 +13,10 @@
   contain-intrinsic-size: 1000px;
 }
 
+.anchor-offset {
+  scroll-margin-top: 104px;
+}
+
 .landing-navbar {
   background: rgba(253, 248, 243, 0.88);
   backdrop-filter: blur(16px);
