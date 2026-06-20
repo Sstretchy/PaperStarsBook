@@ -125,10 +125,12 @@ function TextPagePreview({
   price,
   imageSrc,
   onClick,
+  className
 }: {
   label: string;
   price: string;
   imageSrc: string;
+  className?: string;
   onClick: () => void;
 }) {
   return (
@@ -148,7 +150,7 @@ function TextPagePreview({
         </div>
       </div>
       <div className='preview-caption'>
-        <div className='preview-title'>{label}</div>
+        <div className={`preview-title ${className}`}>{label}</div>
         <div className='preview-price'>{price}</div>
       </div>
     </div>
@@ -369,6 +371,7 @@ export function PricingSection() {
             <div className='flex gap-3 pt-1'>
               <TextPagePreview
                 label='Нейтральный фон'
+                className='break-all'
                 price='бесплатно и одинаково везде'
                 imageSrc={freePreview}
                 onClick={() => setPreviewImage(freePreview)}
