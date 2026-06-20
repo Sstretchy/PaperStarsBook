@@ -1,8 +1,9 @@
 import { Send, Sparkles } from 'lucide-react';
-
-const TELEGRAM_LINK = 'https://t.me/Stretchy97';
+import { useTranslations } from '../../i18n';
 
 export function CTASection() {
+  const t = useTranslations();
+
   return (
     <section className='cta-section py-24 px-8'>
       <div className='cta-panel max-w-[800px] mx-auto text-center rounded-3xl p-12 md:p-20 relative overflow-hidden'>
@@ -14,28 +15,21 @@ export function CTASection() {
             <Sparkles size={28} className='icon-primary' />
           </div>
 
-          <h2 className='cta-title'>Хотите создать сказку про вашего ребёнка?</h2>
+          <h2 className='cta-title'>{t.cta.title}</h2>
 
-          <p className='cta-copy'>
-            Напишите мне, и я помогу понять, какой сюжет и формат подойдут
-            именно вам.
-          </p>
+          <p className='cta-copy'>{t.cta.copy}</p>
 
           <a
-            href={TELEGRAM_LINK}
+            href={t.links.telegram}
             target='_blank'
             rel='noopener noreferrer'
             className='landing-button landing-button-primary landing-button-pill landing-button-xl landing-button-cta'
           >
             <Send size={17} />
-            Написать в Telegram
+            {t.buttons.writeTelegram}
           </a>
 
-          <p className='cta-note'>
-            Можно начать с консультации и показать фотографии,
-            <br />
-            чтобы я оценила, какой формат подойдёт лучше.
-          </p>
+          <p className='cta-note'>{t.cta.note}</p>
         </div>
       </div>
     </section>

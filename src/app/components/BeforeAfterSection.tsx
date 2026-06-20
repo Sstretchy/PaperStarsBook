@@ -14,47 +14,23 @@ import BeforeTwo from '../../assets/before11.webp';
 import AfterTwo from '../../assets/after11.webp';
 import BeforeThree from '../../assets/before111.webp';
 import AfterThree from '../../assets/after111.webp';
+import { useTranslations, type MessageCatalog } from '../../i18n';
 
-const examples = [
-  {
-    before: BeforeOne,
-    after: AfterOne,
-    beforeLabel: 'исходник',
-    afterLabel: 'готовая иллюстрация',
-  },
-  {
-    before: BeforeTwo,
-    after: AfterTwo,
-    beforeLabel: 'исходник',
-    afterLabel: 'готовая иллюстрация',
-  },
-  {
-    before: BeforeThree,
-    after: AfterThree,
-    beforeLabel: 'исходник',
-    afterLabel: 'готовая иллюстрация',
-  },
+const images = [
+  { before: BeforeOne, after: AfterOne },
+  { before: BeforeTwo, after: AfterTwo },
+  { before: BeforeThree, after: AfterThree },
 ];
 
-const highlights = [
-  {
-    icon: Wand2,
-    title: 'Исправляю шесть пальцев и три уха',
-    text: 'Убираю лишнее, кривые детали и ошибки генерации.',
-  },
-  {
-    icon: Eye,
-    title: 'Сохраняю узнаваемость',
-    text: 'Слежу за лицом, возрастом, пропорциями и важными деталями ребёнка. Вплоть до родинок на лице.',
-  },
-  {
-    icon: Printer,
-    title: 'Довожу до печати',
-    text: 'Собираю страницу так, чтобы она выглядела аккуратно в готовой книжке с учётом места под крепление.',
-  },
-];
+const highlightIcons = [Wand2, Eye, Printer];
 
-function Slider({ example }: { example: (typeof examples)[number] }) {
+function Slider({
+  example,
+  t,
+}: {
+  example: { before: string; after: string };
+  t: MessageCatalog['beforeAfter'];
+}) {
   const [position, setPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -64,7 +40,10 @@ function Slider({ example }: { example: (typeof examples)[number] }) {
     const container = containerRef.current;
     if (!container) return 50;
     const rect = container.getBoundingClientRect();
-    return Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100));
+    return Math.min(
+      100,
+      Math.max(0, ((clientX - rect.left) / rect.width) * 100)
+    );
   }, []);
 
   useEffect(() => {
@@ -102,8 +81,8 @@ function Slider({ example }: { example: (typeof examples)[number] }) {
 
     const animate = (timestamp: number) => {
       if (!start) start = timestamp;
-      const t = ((timestamp - start) % 3600) / 1800;
-      const ease = t <= 1 ? t : 2 - t;
+      const phase = ((timestamp - start) % 3600) / 1800;
+      const ease = phase <= 1 ? phase : 2 - phase;
       setPosition(42 + ease * 16);
       frame = requestAnimationFrame(animate);
     };
@@ -140,7 +119,7 @@ function Slider({ example }: { example: (typeof examples)[number] }) {
     >
       <img
         src={example.after}
-        alt='После обработки'
+        alt={t.afterImageAlt}
         draggable={false}
         className='before-after-image'
         loading='lazy'
@@ -156,7 +135,7 @@ function Slider({ example }: { example: (typeof examples)[number] }) {
       >
         <img
           src={example.before}
-          alt='До обработки'
+          alt={t.beforeImageAlt}
           draggable={false}
           className='before-after-image'
           loading='lazy'
@@ -218,9 +197,9 @@ function Slider({ example }: { example: (typeof examples)[number] }) {
         style={{ opacity: position < 12 ? 0 : 1 }}
       >
         <div className='before-after-label-card before-after-label-card-dark'>
-          <div className='before-after-label-title'>ДО</div>
+          <div className='before-after-label-title'>{t.beforeTitle}</div>
           <div className='before-after-label-copy before-after-label-copy-dark'>
-            {example.beforeLabel}
+            {t.beforeLabel}
           </div>
         </div>
       </div>
@@ -230,9 +209,9 @@ function Slider({ example }: { example: (typeof examples)[number] }) {
         style={{ opacity: position > 88 ? 0 : 1 }}
       >
         <div className='before-after-label-card before-after-label-card-light'>
-          <div className='before-after-label-title text-right'>ПОСЛЕ</div>
+          <div className='before-after-label-title text-right'>{t.afterTitle}</div>
           <div className='before-after-label-copy before-after-label-copy-light'>
-            {example.afterLabel}
+            {t.afterLabel}
           </div>
         </div>
       </div>
@@ -240,9 +219,7 @@ function Slider({ example }: { example: (typeof examples)[number] }) {
       {!hasInteracted && (
         <div className='absolute bottom-3.5 left-1/2 -translate-x-1/2'>
           <div className='before-after-hint'>
-            <span className='before-after-hint-text'>
-              перетащите, чтобы сравнить
-            </span>
+            <span className='before-after-hint-text'>{t.dragHint}</span>
           </div>
         </div>
       )}
@@ -252,7 +229,8 @@ function Slider({ example }: { example: (typeof examples)[number] }) {
 
 export function BeforeAfterSection() {
   const [current, setCurrent] = useState(0);
-  const total = examples.length;
+  const t = useTranslations().beforeAfter;
+  const total = images.length;
 
   const prev = () => setCurrent((value) => (value - 1 + total) % total);
   const next = () => setCurrent((value) => (value + 1) % total);
@@ -261,36 +239,30 @@ export function BeforeAfterSection() {
     <section className='landing-section landing-section-bg py-24 px-8'>
       <div className='max-w-[1200px] mx-auto flex flex-col gap-14'>
         <div className='text-center flex flex-col gap-4'>
-          <p className='section-eyebrow'>До и после</p>
-          <h2 className='section-title'>
-            Результат, в котором видно ручную работу
-          </h2>
-          <p className='section-copy max-w-[600px] mx-auto'>
-            Сравните исходный материал и финальную страницу: я работаю с
-            фотографиями, промтами, Photoshop, композицией и деталями, чтобы
-            книжка выглядела цельно и аккуратно.
-          </p>
+          <p className='section-eyebrow'>{t.eyebrow}</p>
+          <h2 className='section-title'>{t.title}</h2>
+          <p className='section-copy max-w-[600px] mx-auto'>{t.copy}</p>
         </div>
 
         <div className='flex flex-col gap-4 items-center'>
-          <Slider key={current} example={examples[current]} />
+          <Slider key={current} example={images[current]} t={t} />
 
           <div className='flex items-center justify-between gap-4'>
             <div className='flex items-center gap-3'>
               <button
                 onClick={prev}
-                aria-label='Предыдущий пример'
+                aria-label={t.prevExampleAria}
                 className='carousel-nav-button'
               >
                 <ChevronLeft size={17} className='text-[var(--foreground)]' />
               </button>
 
               <div className='flex items-center gap-2'>
-                {examples.map((_, i) => (
+                {images.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setCurrent(i)}
-                    aria-label={`Пример ${i + 1}`}
+                    aria-label={`${t.exampleAria} ${i + 1}`}
                     className={`carousel-dot ${i === current ? 'carousel-dot-active' : 'carousel-dot-idle'}`}
                   />
                 ))}
@@ -298,7 +270,7 @@ export function BeforeAfterSection() {
 
               <button
                 onClick={next}
-                aria-label='Следующий пример'
+                aria-label={t.nextExampleAria}
                 className='carousel-nav-button'
               >
                 <ChevronRight size={17} className='text-[var(--foreground)]' />
@@ -308,26 +280,30 @@ export function BeforeAfterSection() {
         </div>
 
         <div className='grid sm:grid-cols-3 gap-5'>
-          {highlights.map((item) => (
-            <div
-              key={item.title}
-              className='surface-card rounded-2xl p-6 flex flex-col gap-3'
-            >
-              <div className='icon-tile w-10 h-10 rounded-xl flex items-center justify-center'>
-                <item.icon size={19} className='icon-primary' />
+          {t.highlights.map((item, index) => {
+            const Icon = highlightIcons[index];
+
+            return (
+              <div
+                key={item.title}
+                className='surface-card rounded-2xl p-6 flex flex-col gap-3'
+              >
+                <div className='icon-tile w-10 h-10 rounded-xl flex items-center justify-center'>
+                  <Icon size={19} className='icon-primary' />
+                </div>
+                <div className='flex flex-col gap-1'>
+                  <span className='card-title-sm'>{item.title}</span>
+                  <p className='section-copy-sm'>{item.text}</p>
+                </div>
               </div>
-              <div className='flex flex-col gap-1'>
-                <span className='card-title-sm'>{item.title}</span>
-                <p className='section-copy-sm'>{item.text}</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <p className='section-copy-xs text-center'>
-          Каждая страница проходит ручную доработку.{' '}
+          {t.footnote}{' '}
           <span className='before-after-footnote-emphasis'>
-            ИИ здесь инструмент, а не готовый результат.
+            {t.footnoteEmphasis}
           </span>
         </p>
       </div>

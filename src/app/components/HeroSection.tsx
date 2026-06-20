@@ -1,10 +1,12 @@
 import { Sparkles, Star, BookOpen } from 'lucide-react';
 import heroBookImage from '../../assets/hero-book-open.webp';
 import examplePdf from '../../assets/example.pdf';
-
-const TELEGRAM_LINK = 'https://t.me/Stretchy97';
+import { useTranslations } from '../../i18n';
 
 export function HeroSection() {
+  const t = useTranslations();
+  const [heroTitleFirstLine, heroTitleSecondLine] = t.hero.title.split('\n');
+
   return (
     <section className='hero-section relative overflow-hidden flex items-center'>
       <div className='hero-bg absolute inset-0 -z-10' />
@@ -30,28 +32,25 @@ export function HeroSection() {
         className='hero-star-5 absolute top-28 right-1/3 opacity-20 text-[#c4844a]'
       />
 
-      <div className='max-w-[1440px] mx-auto w-full px-8 py-6 grid lg:grid-cols-2 gap-16 items-center'>
+      <div className='max-w-[1440px] mx-auto w-full px-8 py-6 lg:py-36 grid lg:grid-cols-2 gap-16 items-center'>
         <div className='flex flex-col gap-8'>
           <h1 className='hero-title'>
-            Книжка с историей,
+            {heroTitleFirstLine}
             <br />
-            где ваш ребёнок <span className='hero-emphasis'>главный герой</span>
+            {heroTitleSecondLine?.replace(t.hero.emphasis, '').trim()}{' '}
+            <span className='hero-emphasis'>{t.hero.emphasis}</span>
           </h1>
 
-          <p className='hero-copy'>
-            Создаю персональные детские фотокнижки по фотографиям ребёнка: с
-            индивидуальным сюжетом, узнаваемым образом, ручной доработкой
-            иллюстраций и подготовкой к печати.
-          </p>
+          <p className='hero-copy'>{t.hero.copy}</p>
 
           <div className='flex flex-wrap gap-4'>
             <a
-              href={TELEGRAM_LINK}
+              href={t.links.telegram}
               target='_blank'
               rel='noopener noreferrer'
               className='landing-button landing-button-primary landing-button-pill landing-button-lg landing-button-order'
             >
-              Заказать книгу
+              {t.buttons.orderBook}
             </a>
             <a
               href={examplePdf}
@@ -59,15 +58,11 @@ export function HeroSection() {
               rel='noopener noreferrer'
               className='landing-button landing-button-outline landing-button-pill landing-button-lg'
             >
-              Посмотреть пример
+              {t.buttons.viewExample}
             </a>
           </div>
 
-          <p className='hero-note'>
-            Меня зовут Ольга. Я живу в Армении, но могу сделать книжку для семьи
-            из любой страны и на трёх языках: армянском, английском и русском.
-            Для заказов из Еревана могу помочь с печатью и доставкой.
-          </p>
+          <p className='hero-note'>{t.hero.note}</p>
         </div>
 
         <div className='relative flex justify-center items-center'>
@@ -79,7 +74,7 @@ export function HeroSection() {
           <div className='hero-book-frame relative rounded-2xl overflow-hidden'>
             <img
               src={heroBookImage}
-              alt='Открытая детская фотокнига с иллюстрациями'
+              alt={t.hero.bookImageAlt}
               className='cover-image'
               width='800'
               height='600'
@@ -91,7 +86,7 @@ export function HeroSection() {
             <div className='hero-badge absolute bottom-4 left-4 px-4 py-2 rounded-xl'>
               <div className='flex items-center gap-2'>
                 <BookOpen size={16} className='icon-primary' />
-                <span className='hero-badge-text'>Примеры готовых книжек</span>
+                <span className='hero-badge-text'>{t.hero.badge}</span>
               </div>
             </div>
           </div>

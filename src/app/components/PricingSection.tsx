@@ -13,37 +13,9 @@ import {
 import freePreview from '../../assets/free.webp';
 import paidPreviewOne from '../../assets/paid1.webp';
 import paidPreviewTwo from '../../assets/paid2.webp';
+import { useTranslations } from '../../i18n';
 
-const pageTypes = [
-  {
-    title: 'Страница с ребёнком без лица',
-    price: '1 000 драм',
-    text: 'Ребёнок показан со спины, сбоку, издалека или в ракурсе, где лицо почти не видно.',
-    note: 'Атмосферные сцены, прогулки, детали сюжета.',
-    highlight: false,
-  },
-  {
-    title: 'Страница с узнаваемым лицом',
-    price: '2 000 драм',
-    text: 'Лицо видно в обычном ракурсе: стоит, сидит, смотрит прямо или немного в сторону.',
-    note: 'Самый частый вариант для сказочных страниц.',
-    highlight: true,
-  },
-  {
-    title: 'Сложный ракурс',
-    price: '4 000 драм',
-    text: 'Ребёнок лежит, смотрит исподлобья, голова наклонена, необычный ракурс или сложная композиция.',
-    note: 'Больше промтов, Photoshop и ручной работы.',
-    highlight: false,
-  },
-  {
-    title: 'Обложка',
-    price: '4 000 драм',
-    text: 'Считается как сложная страница — это главный визуал всей книжки.',
-    note: '',
-    highlight: false,
-  },
-];
+const previewImages = [freePreview, paidPreviewOne, paidPreviewTwo];
 
 function Stepper({
   value,
@@ -109,10 +81,7 @@ function ResultRow({
         {label}
       </span>
       <span
-        className={[
-          'result-value',
-          bold ? 'result-value-bold' : '',
-        ].join(' ')}
+        className={['result-value', bold ? 'result-value-bold' : ''].join(' ')}
       >
         {value}
       </span>
@@ -125,7 +94,7 @@ function TextPagePreview({
   price,
   imageSrc,
   onClick,
-  className
+  className,
 }: {
   label: string;
   price: string;
@@ -150,7 +119,7 @@ function TextPagePreview({
         </div>
       </div>
       <div className='preview-caption'>
-        <div className={`preview-title ${className}`}>{label}</div>
+        <div className={`preview-title ${className ?? ''}`}>{label}</div>
         <div className='preview-price'>{price}</div>
       </div>
     </div>
@@ -162,7 +131,8 @@ function fmt(value: number) {
 }
 
 export function PricingSection() {
-  const calcId = 'pricing-calc';
+  const t = useTranslations();
+  const calcId = t.pricing.calculator.id;
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [fancyBg, setFancyBg] = useState(false);
   const [simple, setSimple] = useState(0);
@@ -171,7 +141,8 @@ export function PricingSection() {
 
   const coverPrice = 4000;
   const totalIllPages = simple + standard + complex;
-  const workPrice = coverPrice + simple * 1000 + standard * 2000 + complex * 4000;
+  const workPrice =
+    coverPrice + simple * 1000 + standard * 2000 + complex * 4000;
   const bgPrice = fancyBg ? totalIllPages * 500 : 0;
   const creativeTotal = workPrice + bgPrice;
   const printEstimate = totalIllPages > 0 ? 400 + 300 * totalIllPages * 2 : 0;
@@ -251,11 +222,11 @@ export function PricingSection() {
             onClick={() => setPreviewImage(null)}
             className='preview-modal-close'
           >
-            ×
+            x
           </button>
           <img
             src={previewImage}
-            alt='Увеличенный пример'
+            alt={t.pricing.textPages.previews[0].modalAlt}
             onClick={(e) => e.stopPropagation()}
             className='preview-modal-image'
           />
@@ -264,16 +235,11 @@ export function PricingSection() {
 
       <div className='max-w-[1200px] mx-auto flex flex-col gap-16'>
         <div className='text-center flex flex-col gap-4'>
-          <p className='section-eyebrow mb-0'>Стоимость</p>
-          <h2 className='section-title'>Стоимость считается по страницам</h2>
-          <p className='section-copy max-w-[580px] mx-auto'>
-            Цена зависит от количества страниц, ракурса ребёнка, сложности сцены
-            и необходимости печати. Перед началом я смотрю исходные фотографии и
-            заранее объясняю, какие страницы простые, а какие потребуют больше
-            ручной работы.
-          </p>
+          <p className='section-eyebrow mb-0'>{t.pricing.eyebrow}</p>
+          <h2 className='section-title'>{t.pricing.title}</h2>
+          <p className='section-copy max-w-[580px] mx-auto'>{t.pricing.copy}</p>
           <a href={`#${calcId}`} className='pricing-link-inline mx-auto'>
-            Перейти к калькулятору
+            {t.buttons.goToCalculator}
             <ArrowRight size={13} />
           </a>
         </div>
@@ -283,22 +249,19 @@ export function PricingSection() {
             <Image size={18} className='icon-primary' />
           </div>
           <div className='flex flex-col gap-1.5'>
-            <span className='pricing-notice-title'>Качество фото важно</span>
-            <p className='pricing-notice-copy'>
-              Чем лучше исходники, тем точнее получится образ ребёнка. Стоимость
-              считается <strong className='text-[var(--foreground)]'>после просмотра фотографий</strong>:
-              я оцениваю качество исходников, ракурс, видимость лица и
-              сложность сцены. Если фото слишком низкого качества, я честно
-              скажу об этом до начала работы.
-            </p>
+            <span className='pricing-notice-title'>
+              {t.pricing.photoNoticeTitle}
+            </span>
+            <p className='pricing-notice-copy'>{t.pricing.photoNoticeCopy}</p>
           </div>
         </div>
 
         <div>
-          <h3 className='card-title mb-5'>Цена за страницу</h3>
+          <h3 className='card-title mb-5'>{t.pricing.pagePriceTitle}</h3>
           <div className='grid sm:grid-cols-2 lg:grid-cols-4 gap-5'>
-            {pageTypes.map((item) => {
-              const isHighlight = item.highlight;
+            {t.pricing.pageTypes.map((item) => {
+              const isHighlight =
+                item.title === t.pricing.pageTypes[1].title;
 
               return (
                 <div
@@ -355,81 +318,55 @@ export function PricingSection() {
 
         <div className='grid md:grid-cols-2 gap-6'>
           <div className='pricing-card p-7 rounded-2xl flex flex-col gap-5'>
-            <h3 className='pricing-subtitle'>Страницы с текстом</h3>
+            <h3 className='pricing-subtitle'>{t.pricing.textPages.title}</h3>
             <ul className='flex flex-col gap-2'>
-              {[
-                'На нейтральном красивом фоне — бесплатно',
-                'На сгенерированном фоне под сюжет — +500 драм за страницу',
-              ].map((item) => (
+              {t.pricing.textPages.bullets.map((item) => (
                 <li key={item} className='flex items-start gap-2.5'>
                   <div className='pricing-dot w-1.5 h-1.5 rounded-full flex-shrink-0 mt-2' />
-                  <span className='pricing-copy text-[var(--foreground)]'>{item}</span>
+                  <span className='pricing-copy text-[var(--foreground)]'>
+                    {item}
+                  </span>
                 </li>
               ))}
             </ul>
 
             <div className='flex gap-3 pt-1'>
-              <TextPagePreview
-                label='Нейтральный фон'
-                className='break-all'
-                price='бесплатно и одинаково везде'
-                imageSrc={freePreview}
-                onClick={() => setPreviewImage(freePreview)}
-              />
-              <TextPagePreview
-                label='Фон под сюжет'
-                price='+500 драм'
-                imageSrc={paidPreviewOne}
-                onClick={() => setPreviewImage(paidPreviewOne)}
-              />
-              <TextPagePreview
-                label='Фон под сюжет'
-                price='+500 драм'
-                imageSrc={paidPreviewTwo}
-                onClick={() => setPreviewImage(paidPreviewTwo)}
-              />
+              {t.pricing.textPages.previews.map((preview, index) => (
+                <TextPagePreview
+                  key={`${preview.label}-${index}`}
+                  label={preview.label}
+                  className={index === 0 ? 'break-all' : undefined}
+                  price={preview.price}
+                  imageSrc={previewImages[index]}
+                  onClick={() => setPreviewImage(previewImages[index])}
+                />
+              ))}
             </div>
           </div>
 
           <a
-            href='https://docs.google.com/forms/d/e/1FAIpQLSfhxM7uJvKVWMc6BltHvv8VBukt9tbipYSuEWJ8yM1HkbSoxQ/viewform'
+            href={t.links.form}
             target='_blank'
             rel='noopener noreferrer'
             className='pricing-card pricing-story-card p-7 rounded-2xl flex flex-col gap-4 relative'
           >
             <div className='flex items-start justify-between gap-2'>
-              <h3 className='pricing-subtitle'>Сюжет и текст</h3>
+              <h3 className='pricing-subtitle'>{t.pricing.story.title}</h3>
               <span className='pricing-story-link flex items-center gap-1 flex-shrink-0'>
                 <FileText size={12} />
-                Посмотреть опросник
+                {t.pricing.story.linkLabel}
               </span>
             </div>
-            <p className='pricing-copy'>
-              Можно выбрать готовый сюжет или заказать индивидуальную историю по
-              опросу. Перед началом я присылаю вопросы о ребёнке: характер,
-              любимые вещи, детали из жизни и пожелания к сюжету. На основе
-              ответов и ваших фотографий я выстраиваю историю и сцены.
-            </p>
-            <p className='pricing-story-callout'>
-              Текст не остаётся целиком: помимо создания сюжета я редактирую его
-              вручную, чтобы сказка звучала живо, мягко и с душой.
-            </p>
+            <p className='pricing-copy'>{t.pricing.story.copy}</p>
+            <p className='pricing-story-callout'>{t.pricing.story.callout}</p>
             <ChevronRight size={16} className='pricing-story-arrow' />
           </a>
 
           <div className='pricing-card p-7 rounded-2xl flex flex-col gap-4'>
-            <h3 className='pricing-subtitle'>Печать в Ереване</h3>
-            <p className='pricing-copy'>
-              Файлы можно напечатать самостоятельно в любой типографии. Если вы
-              в Ереване, я могу помочь с печатью и доставкой.
-            </p>
+            <h3 className='pricing-subtitle'>{t.pricing.printing.title}</h3>
+            <p className='pricing-copy'>{t.pricing.printing.copy}</p>
             <ul className='flex flex-col gap-2'>
-              {[
-                'Печать оплачивается по ценам типографии',
-                'Ориентир: A4 — около 300 драм за сторону',
-                'Пружина для скрепления — около 400 драм',
-                'Моя помощь с печатью и доставкой по Еревану — 3 000 драм + оплата курьера по факту',
-              ].map((item) => (
+              {t.pricing.printing.bullets.map((item) => (
                 <li key={item} className='flex items-start gap-2.5'>
                   <div className='pricing-dot w-1.5 h-1.5 rounded-full flex-shrink-0 mt-2' />
                   <span className='pricing-list-text'>{item}</span>
@@ -438,7 +375,7 @@ export function PricingSection() {
             </ul>
 
             <a
-              href='https://yandex.com/maps/-/CTAvvT7d'
+              href={t.links.map}
               target='_blank'
               rel='noopener noreferrer'
               className='pricing-map-link flex items-start gap-3 rounded-xl p-4 group'
@@ -448,33 +385,28 @@ export function PricingSection() {
               </div>
               <div className='flex flex-col gap-0.5 min-w-0'>
                 <div className='flex items-center gap-1.5'>
-                  <span className='pricing-map-title'>Printing House на карте</span>
-                  <ExternalLink size={12} className='icon-primary opacity-70 flex-shrink-0' />
+                  <span className='pricing-map-title'>
+                    {t.pricing.printing.mapTitle}
+                  </span>
+                  <ExternalLink
+                    size={12}
+                    className='icon-primary opacity-70 flex-shrink-0'
+                  />
                 </div>
-                <p className='pricing-map-copy'>
-                  Типография, где знают, как печатать такой формат, и откуда я
-                  беру примерные цены.
-                </p>
+                <p className='pricing-map-copy'>{t.pricing.printing.mapCopy}</p>
               </div>
             </a>
 
             <p className='pricing-field-hint border-t border-[var(--border)] pt-3'>
-              Доставка доступна только по Еревану.
+              {t.pricing.printing.deliveryNote}
             </p>
           </div>
 
           <div className='pricing-card p-7 rounded-2xl flex flex-col gap-4'>
-            <h3 className='pricing-subtitle'>Правки</h3>
-            <p className='pricing-copy'>
-              Чтобы результат был предсказуемым, сначала мы согласовываем текст,
-              потом идею и сцены для страниц. После этого я начинаю работу над
-              картинками.
-            </p>
+            <h3 className='pricing-subtitle'>{t.pricing.revisions.title}</h3>
+            <p className='pricing-copy'>{t.pricing.revisions.copy}</p>
             <ul className='flex flex-col gap-3'>
-              {[
-                'Если вы согласовываете этапы по ходу работы, дополнительные правки после утверждения — 1 000 драм',
-                'Если вам некогда участвовать в процессе и вы полностью доверяете мне, в конце включена одна большая бесплатная правка',
-              ].map((item) => (
+              {t.pricing.revisions.bullets.map((item) => (
                 <li key={item} className='flex items-start gap-2.5'>
                   <div className='pricing-dot w-1.5 h-1.5 rounded-full flex-shrink-0 mt-2' />
                   <span className='pricing-list-text'>{item}</span>
@@ -486,17 +418,18 @@ export function PricingSection() {
 
         <div id={calcId} className='anchor-offset flex flex-col gap-6'>
           <div>
-            <p className='section-eyebrow mb-2'>Калькулятор</p>
-            <h3 className='section-title-sm mb-2'>Рассчитайте примерную стоимость</h3>
-            <p className='section-copy-sm'>
-              Укажите количество страниц разной сложности — калькулятор покажет
-              ориентир по работе и примерную стоимость печати.
-            </p>
+            <p className='section-eyebrow mb-2'>{t.pricing.calculator.eyebrow}</p>
+            <h3 className='section-title-sm mb-2'>
+              {t.pricing.calculator.title}
+            </h3>
+            <p className='section-copy-sm'>{t.pricing.calculator.copy}</p>
           </div>
 
           <div className='pricing-calc-shell rounded-3xl overflow-hidden grid lg:grid-cols-2'>
             <div className='pricing-calc-left flex flex-col p-8 lg:p-10'>
-              <h4 className='pricing-mini-heading mb-6'>Параметры книжки</h4>
+              <h4 className='pricing-mini-heading mb-6'>
+                {t.pricing.calculator.paramsTitle}
+              </h4>
 
               <div className='flex flex-col gap-6 flex-1'>
                 <div className='flex items-start gap-3'>
@@ -512,9 +445,11 @@ export function PricingSection() {
                     </svg>
                   </div>
                   <div className='flex flex-col gap-0.5'>
-                    <label className='pricing-field-label'>Обложка</label>
+                    <label className='pricing-field-label'>
+                      {t.pricing.calculator.coverLabel}
+                    </label>
                     <span className='pricing-field-hint'>
-                      Входит всегда — 4 000 драм.
+                      {t.pricing.calculator.coverHint}
                     </span>
                   </div>
                 </div>
@@ -523,99 +458,105 @@ export function PricingSection() {
                   id='calc-bg'
                   checked={fancyBg}
                   onChange={setFancyBg}
-                  label='Сгенерированные фоны для текстовых страниц'
-                  hint='Нейтральный фон для текста — бесплатно. Фон под сюжет — +500 драм за каждую иллюстрированную страницу.'
+                  label={t.pricing.calculator.generatedBgLabel}
+                  hint={t.pricing.calculator.generatedBgHint}
                 />
 
                 <div className='pricing-divider' />
 
                 <StepperField
-                  label='Страниц, где ребёнок со спины или без лица'
+                  label={t.pricing.calculator.simpleLabel}
                   value={simple}
                   onChange={setSimple}
-                  hint='1 000 драм за страницу.'
+                  hint={t.pricing.calculator.simpleHint}
                 />
                 <StepperField
-                  label='Страниц, где лицо видно в обычном ракурсе'
+                  label={t.pricing.calculator.standardLabel}
                   value={standard}
                   onChange={setStandard}
-                  hint='2 000 драм за страницу.'
+                  hint={t.pricing.calculator.standardHint}
                 />
                 <StepperField
-                  label='Страниц со сложным ракурсом лица'
+                  label={t.pricing.calculator.complexLabel}
                   value={complex}
                   onChange={setComplex}
-                  hint='4 000 драм за страницу — лежит, смотрит исподлобья, голова наклонена, сложная поза.'
+                  hint={t.pricing.calculator.complexHint}
                 />
               </div>
             </div>
 
             <div className='pricing-calc-right flex flex-col p-8 lg:p-10'>
               <h4 className='pricing-mini-heading mb-5'>
-                Рассчитанная примерная стоимость
+                {t.pricing.calculator.resultTitle}
               </h4>
 
               <div className='flex flex-col gap-0'>
-                <ResultRow label='Обложка' value={fmt(coverPrice)} />
+                <ResultRow
+                  label={t.pricing.calculator.coverRow}
+                  value={fmt(coverPrice)}
+                />
                 <ResultRow
                   label={
                     simple > 0
-                      ? `Простые страницы (${simple} × 1 000)`
-                      : 'Простые страницы'
+                      ? `${t.pricing.calculator.simpleRow} (${simple} x 1 000)`
+                      : t.pricing.calculator.simpleRow
                   }
-                  value={simple > 0 ? fmt(simple * 1000) : '—'}
+                  value={simple > 0 ? fmt(simple * 1000) : '-'}
                 />
                 <ResultRow
                   label={
                     standard > 0
-                      ? `Стандартные страницы (${standard} × 2 000)`
-                      : 'Стандартные страницы'
+                      ? `${t.pricing.calculator.standardRow} (${standard} x 2 000)`
+                      : t.pricing.calculator.standardRow
                   }
-                  value={standard > 0 ? fmt(standard * 2000) : '—'}
+                  value={standard > 0 ? fmt(standard * 2000) : '-'}
                 />
                 <ResultRow
                   label={
                     complex > 0
-                      ? `Сложные страницы (${complex} × 4 000)`
-                      : 'Сложные страницы'
+                      ? `${t.pricing.calculator.complexRow} (${complex} x 4 000)`
+                      : t.pricing.calculator.complexRow
                   }
-                  value={complex > 0 ? fmt(complex * 4000) : '—'}
+                  value={complex > 0 ? fmt(complex * 4000) : '-'}
                 />
                 <ResultRow
                   label={
                     bgPrice > 0
-                      ? `Фоны для текста (${totalIllPages} × 500)`
-                      : 'Фоны для текста'
+                      ? `${t.pricing.calculator.textBgRow} (${totalIllPages} x 500)`
+                      : t.pricing.calculator.textBgRow
                   }
-                  value={bgPrice > 0 ? fmt(bgPrice) : '—'}
+                  value={bgPrice > 0 ? fmt(bgPrice) : '-'}
                 />
-                <ResultRow label='Итого за работу' value={fmt(creativeTotal)} bold />
+                <ResultRow
+                  label={t.pricing.calculator.workTotalRow}
+                  value={fmt(creativeTotal)}
+                  bold
+                />
               </div>
 
               <div className='pricing-spacer-md' />
 
               <p className='pricing-summary-note'>
-                Печать считается отдельно по ценам типографии. Ориентир: 300
-                драм за сторону A4 + 400 драм за пружину.
+                {t.pricing.calculator.printNote}
               </p>
               <div className='flex flex-col gap-0'>
                 <ResultRow
                   label={
                     totalIllPages > 0
-                      ? `Примерная печать (${totalIllPages} стр. × 2 стороны × 300)`
-                      : 'Примерная печать'
+                      ? `${t.pricing.calculator.printRow} (${totalIllPages} стр. x 2 стороны x 300)`
+                      : t.pricing.calculator.printRow
                   }
-                  value={totalIllPages > 0 ? fmt(300 * totalIllPages * 2) : '—'}
+                  value={totalIllPages > 0 ? fmt(300 * totalIllPages * 2) : '-'}
                   muted
                 />
                 <ResultRow
-                  label='Пружина'
-                  value={totalIllPages > 0 ? '400 драм' : '—'}
+                  label={t.pricing.calculator.spiralRow}
+                  value={totalIllPages > 0 ? '400 драм' : '-'}
                   muted
                 />
                 <ResultRow
-                  label='Итого с печатью (ориентир)'
-                  value={totalIllPages > 0 ? fmt(totalWithPrint) : '—'}
+                  label={t.pricing.calculator.grandTotalRow}
+                  value={totalIllPages > 0 ? fmt(totalWithPrint) : '-'}
                   bold
                 />
               </div>
@@ -623,19 +564,11 @@ export function PricingSection() {
               <div className='mt-auto pt-6'>
                 <div className='pricing-payment-box p-4 rounded-xl flex flex-col gap-4'>
                   <p>
-                    <b>Как проходит оплата:</b>
+                    <b>{t.pricing.calculator.paymentTitle}</b>
                   </p>
-                  <p>
-                    После просмотра фото и согласования формата вносится
-                    предоплата 50%. Остаток оплачивается перед передачей
-                    финальных файлов без водяного знака или перед печатью.
-                  </p>
+                  <p>{t.pricing.calculator.paymentCopy}</p>
                   <p className='pricing-field-hint'>
-                    Это предварительный расчёт. Точная стоимость зависит от
-                    качества исходных фото и сложности конкретных сцен. Если
-                    фото маленькие, размытые или плохого качества, я могу не
-                    взять их в работу, потому что не смогу отвечать за похожесть
-                    и аккуратный результат.
+                    {t.pricing.calculator.paymentHint}
                   </p>
                 </div>
               </div>
@@ -645,12 +578,12 @@ export function PricingSection() {
 
         <div className='flex justify-center'>
           <a
-            href='https://t.me/Stretchy97'
+            href={t.links.telegram}
             target='_blank'
             rel='noopener noreferrer'
             className='landing-button landing-button-primary landing-button-pill landing-button-xl landing-button-order'
           >
-            Заказать книгу
+            {t.buttons.orderBook}
             <Send size={18} />
           </a>
         </div>

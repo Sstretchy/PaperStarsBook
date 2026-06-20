@@ -1,20 +1,18 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import Logo from '../../assets/logo.webp';
-
-const TELEGRAM_LINK = 'https://t.me/Stretchy97';
-
-const links = [
-  { label: 'Что это', href: '#what' },
-  { label: 'Пример', href: '#example' },
-  { label: 'Как работает', href: '#how' },
-  { label: 'Стоимость', href: '#pricing' },
-  { label: 'Калькулятор стоимости', href: '#pricing-calc' },
-  { label: 'FAQ', href: '#faq' },
-];
+import { useLocale, useTranslations } from '../../i18n';
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const t = useTranslations();
+  const { locale, setLocale } = useLocale();
+  const handleLocaleChange = (nextLocale: 'ru' | 'hy') => {
+    setLocale(nextLocale);
+    setMobileOpen(false);
+  };
+  const getLocaleLabel = (item: 'ru' | 'hy') =>
+    item === 'ru' ? 'RU' : 'AM';
 
   return (
     <nav
@@ -24,45 +22,93 @@ export function Navbar() {
         <div className='flex items-center gap-2.5'>
           <img
             src={Logo}
-            alt='Логотип'
+            alt={t.brand.logoAlt}
             className='landing-logo'
             width='40'
             height='40'
             decoding='async'
           />
-          <span className='landing-brand'>Paper stars book</span>
+          <span className='landing-brand'>{t.brand.name}</span>
         </div>
 
         <div className='hidden md:flex items-center gap-8'>
-          {links.map((l) => (
+          {t.nav.links.map((l) => (
             <a key={l.href} href={l.href} className='landing-nav-link'>
               {l.label}
             </a>
           ))}
         </div>
 
-        <div className='hidden md:block'>
+        <div className='hidden md:flex items-center gap-3'>
+          <div className='flex items-center rounded-full border border-[var(--border)] bg-[rgba(255,251,246,0.82)] p-1 backdrop-blur-sm'>
+            {(['ru', 'hy'] as const).map((item) => {
+              const active = locale === item;
+              const label = getLocaleLabel(item);
+
+              return (
+                <button
+                  key={item}
+                  type='button'
+                  onClick={() => handleLocaleChange(item)}
+                  aria-pressed={active}
+                  className={`cursor-pointer rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] transition-colors ${
+                    active
+                      ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
+                      : 'text-[var(--muted-foreground)]'
+                  }`}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
           <a
-            href={TELEGRAM_LINK}
+            href={t.links.telegram}
             target='_blank'
             rel='noopener noreferrer'
             className='landing-button landing-button-primary landing-button-pill landing-button-sm'
           >
-            Заказать книгу
+            {t.buttons.orderBook}
           </a>
         </div>
 
-        <button
-          className='landing-mobile-toggle md:hidden'
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
-          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        <div className='flex items-center gap-2 md:hidden'>
+          <div className='flex items-center rounded-full border border-[var(--border)] bg-[rgba(255,251,246,0.82)] p-1'>
+            {(['ru', 'hy'] as const).map((item) => {
+              const active = locale === item;
+              const label = getLocaleLabel(item);
+
+              return (
+                <button
+                  key={item}
+                  type='button'
+                  onClick={() => handleLocaleChange(item)}
+                  aria-pressed={active}
+                  className={`rounded-full px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] transition-colors ${
+                    active
+                      ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
+                      : 'text-[var(--muted-foreground)]'
+                  }`}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            className='landing-mobile-toggle md:hidden'
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
       {mobileOpen && (
         <div className='landing-mobile-menu md:hidden mt-4 pb-4 flex flex-col gap-4'>
-          {links.map((l) => (
+          {t.nav.links.map((l) => (
             <a
               key={l.href}
               href={l.href}
@@ -73,13 +119,13 @@ export function Navbar() {
             </a>
           ))}
           <a
-            href={TELEGRAM_LINK}
+            href={t.links.telegram}
             target='_blank'
             rel='noopener noreferrer'
             onClick={() => setMobileOpen(false)}
-            className='landing-button landing-button-primary landing-button-pill landing-button-md w-fit'
+            className='landing-button landing-button-primary landing-button-pill landing-button-md w-full sm:w-fit'
           >
-            Заказать книгу
+            {t.buttons.orderBook}
           </a>
         </div>
       )}

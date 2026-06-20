@@ -10,52 +10,57 @@ import { FAQSection } from './components/FAQSection';
 import { CTASection } from './components/CTASection';
 import { Footer } from './components/Footer';
 import { BeforeAfterSection } from './components/BeforeAfterSection';
+import { SeoHead } from './components/SeoHead';
+import { I18nProvider } from '../i18n';
 
 export default function App() {
   return (
-    <div className='app-shell'>
-      <Navbar />
+    <I18nProvider initialLocale='ru'>
+      <div className='app-shell'>
+        <SeoHead />
+        <Navbar />
 
-      <main className='app-main'>
-        <section id='hero'>
-          <HeroSection />
-        </section>
+        <main className='app-main'>
+          <section id='hero'>
+            <HeroSection />
+          </section>
 
-        <section id='what' className='deferred-section'>
-          <WhatIsItSection />
-        </section>
+          <section id='what' className='deferred-section'>
+            <WhatIsItSection />
+          </section>
 
-        <section id='example' className='deferred-section'>
-          <BeforeAfterSection />
-          <BookExampleSection />
-        </section>
+          <section id='example' className='deferred-section'>
+            <BeforeAfterSection />
+            <BookExampleSection />
+          </section>
 
-        <div className='deferred-section'>
-          <WhyValueSection />
-        </div>
+          <div className='deferred-section'>
+            <WhyValueSection />
+          </div>
 
-        <section id='how' className='deferred-section'>
-          <HowItWorksSection />
-        </section>
+          <section id='how' className='deferred-section'>
+            <HowItWorksSection />
+          </section>
 
-        <div className='deferred-section'>
-          <WhatIsIncludedSection />
-        </div>
+          <div className='deferred-section'>
+            <WhatIsIncludedSection />
+          </div>
 
-        <section id='pricing' className='deferred-section'>
-          <PricingSection />
-        </section>
+          <section id='pricing' className='deferred-section'>
+            <PricingSection />
+          </section>
 
-        <section id='faq' className='deferred-section'>
-          <FAQSection />
-        </section>
+          <section id='faq' className='deferred-section'>
+            <FAQSection />
+          </section>
 
-        <div className='deferred-section'>
-          <CTASection />
-        </div>
-      </main>
+          <div className='deferred-section'>
+            <CTASection />
+          </div>
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </I18nProvider>
   );
 }
