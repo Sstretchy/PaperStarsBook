@@ -392,7 +392,7 @@ export function PricingSection() {
           </div>
 
           <a
-            href='https://docs.google.com/forms/d/e/1FAIpQLSfjZYeuqW98VLkq7elN20tdFI3MIuwUdRgCbg2veEGmVDDumA/viewform?usp=publish-editor'
+            href='https://docs.google.com/forms/d/e/1FAIpQLSfhxM7uJvKVWMc6BltHvv8VBukt9tbipYSuEWJ8yM1HkbSoxQ/viewform'
             target='_blank'
             rel='noopener noreferrer'
             className='pricing-card pricing-story-card p-7 rounded-2xl flex flex-col gap-4 relative'
