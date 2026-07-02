@@ -532,6 +532,39 @@
   transform: translateY(-4px);
 }
 
+.book-example-grid {
+  align-items: stretch;
+}
+
+.book-example-card-content {
+  display: grid;
+  grid-template-rows: minmax(2.8em, auto) 1fr;
+}
+
+.book-example-card-title,
+.book-example-card-copy {
+  text-wrap: pretty;
+}
+
+.book-example-card-copy {
+  min-height: calc(1.6em * 5);
+}
+
+section[data-locale='hy'] .book-example-card-content {
+  grid-template-rows: minmax(3.2em, auto) 1fr;
+}
+
+section[data-locale='hy'] .book-example-card-title {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+section[data-locale='hy'] .book-example-card-copy {
+  font-size: 0.79rem;
+  line-height: 1.7;
+  min-height: calc(1.7em * 5);
+}
+
 .surface-card-lg {
   background: var(--card);
   border: 1px solid var(--border);
@@ -640,6 +673,11 @@
 
 .footer-heart {
   color: rgba(232, 184, 122, 0.8);
+}
+
+html[lang='hy'] {
+  --font-display: 'Noto Serif Armenian', 'DejaVu Serif', Georgia, serif;
+  --font-body: 'Noto Sans Armenian', 'DejaVu Sans', 'Segoe UI', sans-serif;
 }
 
 .section-image-backdrop {
