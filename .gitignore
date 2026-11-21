@@ -17,3 +17,8 @@ pnpm-debug.log*
 .env
 .env.*
 !.env.example
+
+# SMM: фото клиентов и сгенерированные слайды не публикуем
+src/smm/highlights/photos/
+src/smm/highlights/build/
+src/smm/highlights/out/
