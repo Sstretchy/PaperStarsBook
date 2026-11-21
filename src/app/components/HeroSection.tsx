@@ -1,6 +1,5 @@
 import { Sparkles, Star, BookOpen } from 'lucide-react';
 import heroBookImage from '../../assets/hero-book-open.webp';
-import examplePdf from '../../assets/example.pdf';
 import { useTranslations } from '../../i18n';
 
 export function HeroSection() {
@@ -53,12 +52,10 @@ export function HeroSection() {
               {t.buttons.orderBook}
             </a>
             <a
-              href={examplePdf}
-              target='_blank'
-              rel='noopener noreferrer'
+              href='#pricing'
               className='landing-button landing-button-outline landing-button-pill landing-button-lg'
             >
-              {t.buttons.viewExample}
+              {t.buttons.seePrices}
             </a>
           </div>
 

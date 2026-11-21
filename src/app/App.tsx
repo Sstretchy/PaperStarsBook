@@ -3,9 +3,7 @@ import { HeroSection } from './components/HeroSection';
 import { WhatIsItSection } from './components/WhatIsItSection';
 import { BookExampleSection } from './components/BookExampleSection';
 import { HowItWorksSection } from './components/HowItWorksSection';
-import { WhatIsIncludedSection } from './components/WhatIsIncludedSection';
 import { PricingSection } from './components/PricingSection';
-import { WhyValueSection } from './components/WhyValueSection';
 import { FAQSection } from './components/FAQSection';
 import { CTASection } from './components/CTASection';
 import { Footer } from './components/Footer';
@@ -25,29 +23,24 @@ export default function App() {
             <HeroSection />
           </section>
 
+          <section id='examples' className='deferred-section'>
+            <BookExampleSection />
+          </section>
+
           <section id='what' className='deferred-section'>
             <WhatIsItSection />
           </section>
 
-          <section id='example' className='deferred-section'>
+          <div className='deferred-section'>
             <BeforeAfterSection />
-            <BookExampleSection />
-          </section>
-
-          <div className='deferred-section'>
-            <WhyValueSection />
-          </div>
-
-          <section id='how' className='deferred-section'>
-            <HowItWorksSection />
-          </section>
-
-          <div className='deferred-section'>
-            <WhatIsIncludedSection />
           </div>
 
           <section id='pricing' className='deferred-section'>
             <PricingSection />
+          </section>
+
+          <section id='how' className='deferred-section'>
+            <HowItWorksSection />
           </section>
 
           <section id='faq' className='deferred-section'>

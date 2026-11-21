@@ -1,4 +1,5 @@
 import { useTranslations } from '../../i18n';
+import { withDeposit } from '../pricing';
 
 export function HowItWorksSection() {
   const t = useTranslations();
@@ -22,7 +23,9 @@ export function HowItWorksSection() {
 
               <div className='flex flex-col gap-2 text-center md:text-left'>
                 <h3 className='card-title-md'>{step.title}</h3>
-                <p className='section-copy-sm'>{step.text}</p>
+                <p className='section-copy-sm'>
+                  {withDeposit(step.text, t.pricing.currency)}
+                </p>
               </div>
             </div>
           ))}

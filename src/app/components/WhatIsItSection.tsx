@@ -1,7 +1,7 @@
-import { User, Feather, BookOpen } from 'lucide-react';
+import { User, Feather, Sparkles } from 'lucide-react';
 import { useTranslations } from '../../i18n';
 
-const icons = [User, Feather, BookOpen];
+const icons = [User, Feather, Sparkles];
 
 export function WhatIsItSection() {
   const t = useTranslations();
@@ -33,12 +33,12 @@ export function WhatIsItSection() {
           })}
         </div>
 
-        <div className='surface-note mt-10 mx-auto max-w-[720px] text-center py-5 px-8 rounded-2xl'>
-          <p className='feature-text'>
-            {t.whatIsIt.note}{' '}
-            <span className='font-semibold'>{t.whatIsIt.noteEmphasis}</span>
-          </p>
-        </div>
+        <figure className='surface-note mt-10 mx-auto max-w-[720px] text-center py-6 px-8 rounded-2xl'>
+          <blockquote className='quote-text'>«{t.whatIsIt.quote}»</blockquote>
+          <figcaption className='quote-attribution mt-2'>
+            — {t.whatIsIt.quoteAuthor}
+          </figcaption>
+        </figure>
       </div>
     </section>
   );
